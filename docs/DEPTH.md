@@ -32,6 +32,9 @@
 | TRAP-12 | DST自然日 | 固定24小时 | 按当地午夜切片 | `app/modules/m5_timeliness/rules.py` | `tests/test_m5.py::test_dst_actual_elapsed_hours` |
 | TRAP-13 | 迟到妥投补传 | 按上传时间赔付 | 发生时间重建 | `app/modules/m4_paths/rules.py` | `tests/test_m4.py::test_late_upload_event_time_decides` |
 | TRAP-23 | 假日端点 | 误算全天 | 当地日半开切段 | `app/modules/m5_timeliness/rules.py` | `tests/test_m5.py::test_holiday_full_day_stops` |
+| TRAP-24 | 分段工时丢时 | 各段四舍五入后对不上总时差 | 整数微秒累计，分段和恒等于总工时 | `app/modules/m5_timeliness/rules.py` | `tests/test_m5.py::test_real_segments_sum_to_total` |
+| TRAP-25 | 缺节点/同刻冲突 | 并入相邻环节误派责任 | 保留待定归属并挂催办原因，时长不删 | `app/modules/m5_timeliness/rules.py` | `tests/test_m5.py::test_missing_depart_kept_pending_not_merged` |
+| TRAP-27 | 晚到补传改责任段 | 一次裁决后责任固化 | 按事件时刻重算，补传后待定段自动转归属 | `app/modules/m5_timeliness/rules.py` | `tests/test_m5.py::test_late_arriving_scan_resolves_pending_segment` |
 
 ## 对账规则
 

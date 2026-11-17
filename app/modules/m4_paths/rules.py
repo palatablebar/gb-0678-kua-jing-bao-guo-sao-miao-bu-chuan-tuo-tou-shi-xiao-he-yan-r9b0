@@ -20,5 +20,9 @@ def evaluate(rows,context):
         delivery=next((e for e in valid if e["node"]=="DELIVERED"),None)
         first=accepts[0]
         source_lines=[line for e in valid for line in sources(e)]
-        good.append({**first,"_sources":source_lines,"accepted_at":first["event_utc"],"delivered_at":delivery["event_utc"] if delivery else None,"delivery_uploaded_at":delivery["received_utc"] if delivery else None,"scan_count":len(valid),"path":" → ".join(e["node"] for e in valid),"reported":delivery["reported"] if delivery else first["reported"]})
+        node_times={}
+        for e in valid:
+            node_times.setdefault(e["node"],e["event_utc"])
+        timeline=[{"node":e["node"],"event_utc":e["event_utc"],"received_utc":e["received_utc"],"scan_id":e["scan_id"]} for e in valid]
+        good.append({**first,"_sources":source_lines,"accepted_at":first["event_utc"],"delivered_at":delivery["event_utc"] if delivery else None,"delivery_uploaded_at":delivery["received_utc"] if delivery else None,"scan_count":len(valid),"path":" → ".join(e["node"] for e in valid),"reported":delivery["reported"] if delivery else first["reported"],"node_times":node_times,"events":timeline})
     return {"rows":good,"quarantine":bad,"metrics":{"parcels":len(good),"delivered":sum(r["delivered_at"] is not None for r in good),"path_errors":len(bad)}}
